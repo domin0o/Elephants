@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -16,6 +17,17 @@ namespace Elephants
             Console.WriteLine("Na imię mi " + Name);
             Console.WriteLine("Długość moich uszu to " + EarSize + " cm.");
         }
+
+        public void HearMessage(string message, Elephant whoSaidIt)
+        {
+            Console.WriteLine(Name + " usłyszał(a) wiadomość.");
+            Console.WriteLine(whoSaidIt.Name + " powiedział(a): " + message);
+        }
+
+        public void SpeakTo(Elephant whoToTalkTo, string message)
+        {
+            whoToTalkTo.HearMessage(message, this); // w tym wypadku this będzie odwołaniem do obiektu, który wywołuje funkcję SpeakTo.
+        }
     }
     internal class Program
     {
@@ -24,8 +36,8 @@ namespace Elephants
             Elephant laura = new Elephant() { Name = "Laura", EarSize = 80 };
             Elephant lucek = new Elephant() { Name = "Lucek", EarSize = 100};
             Elephant zmiennaPomocnicza;
-            Console.WriteLine("Wciśnij 1 (Lucek), 2 (Laura) lub 3 (przestawienie):");
             while (true) {
+                Console.WriteLine("Wciśnij 1 (Lucek), 2 (Laura), 3 (przestawienie),4 (wybranie liczby), 5 (przesłanie wiadomości):");
                 Console.Write("Twój wybór: "); 
                 string userAnswer = Console.ReadLine();
                 if (int.TryParse(userAnswer, out int answer))
@@ -50,8 +62,18 @@ namespace Elephants
                         case 4:
                             // Test jak działają referencje
                             lucek = laura;
-                            lucek.EarSize = 4321;
+                            Console.Write("Wpisz liczę: ");
+                            string userEarSize = Console.ReadLine();
+                            if(int.TryParse(userEarSize, out int userEarInt))
+                            {
+                                lucek.EarSize = userEarInt;
+                            }
                             lucek.WhoAmI();
+                            break;
+                        case 5:
+                            Console.Write("Wpisz wiadomość: ");
+                            string userSpeakTo = Console.ReadLine();
+                            laura.SpeakTo(lucek, userSpeakTo);
                             break;
                         default: return;
                     }
